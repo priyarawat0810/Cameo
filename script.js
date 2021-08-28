@@ -4,22 +4,27 @@ let capBtn = document.querySelector("#capture");
 let mediaRecorder;
 let chunks = [];
 let isRecording = false;
-let recDiv = recordBtn.querySelector("div");
-let captureDiv = capBtn.querySelector("div");
+let recDiv = recordBtn.querySelector("i");
+let captureDiv = capBtn.querySelector("i");
 let appliedFilter;
 let minZoom = 1;
 let maxZoom = 3;
 let zoomInBtn = document.querySelector(".zoom-in");
 let zoomOutBtn = document.querySelector(".zoom-out");
-let currZoom = 1;
+let currZoom = 1;  
 let filters = document.querySelectorAll(".filter");
-let galleryBtn = document.querySelector("#gallery");
+let galleryBtn = document.querySelector("#gallery");  
+let filterContainer = document.querySelector(".filter-container");
+let zoomContainer = document.querySelector(".zoom-container");
+let blackScreen;
 
+/*-------------------Move from camera to gallery---------------------*/
 galleryBtn.addEventListener("click", function(){
   //localhost:5500/index.html -> localhost:5500/gallery.html
   location.assign("gallery.html");
 });
-
+ 
+/*-------------------Zoom In---------------------*/
 zoomInBtn.addEventListener("click", function(){
     if(currZoom<maxZoom){
         currZoom = currZoom + 0.1;
@@ -27,6 +32,7 @@ zoomInBtn.addEventListener("click", function(){
     video.style.transform = `scale(${currZoom})`;
 });
 
+/*-------------------Zoom Out---------------------*/
 zoomOutBtn.addEventListener("click", function(){
     if(currZoom>minZoom){
         currZoom = currZoom - 0.1;
@@ -34,10 +40,11 @@ zoomOutBtn.addEventListener("click", function(){
     video.style.transform = `scale(${currZoom})`;
 });
 
+/*-------------------Filters---------------------*/
 for (let i = 0; i < filters.length; i++) {
   filters[i].addEventListener("click", function (e) {
     removeFilter();
-    appliedFilter = e.currentTarget.style.backgroundColor;
+    appliedFilter  = e.currentTarget.style.backgroundColor;
     let div = document.createElement("div");
     div.style.backgroundColor = appliedFilter;
     div.classList.add("filter-div");
@@ -45,30 +52,22 @@ for (let i = 0; i < filters.length; i++) {
   });
 }
 
-// startBtn.addEventListener("click", function(){
-//     //code for start recording
-//     mediaRecorder.start();
-// });
-
-// stopBtn.addEventListener("click", function(){
-//     //stop recording
-//     mediaRecorder.stop();
-// });
-
 recordBtn.addEventListener("click", function (e) {
   if (isRecording) {
     mediaRecorder.stop();
     isRecording = false;
-    // e.currentTarget.innerText = "Start";
+    filterContainer.style.display = "initial";
+    zoomContainer.style.display = "flex";
     recDiv.classList.remove("record-animation");
   } else {
     mediaRecorder.start();
     appliedFilter = "";
     removeFilter();
+    filterContainer.style.display = "none";
+    zoomContainer.style.display = "none";
     currZoom = 1;
     video.style.transform = `scale(${currZoom})`;
     isRecording = true;
-    // e.currentTarget.innerText = "Recording";
     recDiv.classList.add("record-animation");
   }
 });
@@ -80,6 +79,7 @@ capBtn.addEventListener("click", function () {
   setTimeout(function() {
     captureDiv.classList.remove("capture-animation");
   }, 1000);
+
   let canvas = document.createElement("canvas");
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
@@ -97,13 +97,6 @@ capBtn.addEventListener("click", function () {
   }
 
   let link = canvas.toDataURL();
-  // console.log(link);
-  // let a = document.createElement("a");
-  // a.href = link;
-  // a.download = "img.png";
-  // a.click();
-  // a.remove();
-  // canvas.remove();
 
   addMedia(link, "image");
 });
@@ -122,12 +115,7 @@ navigator.mediaDevices
     mediaRecorder.addEventListener("stop", function (e) {
       let blob = new Blob(chunks, { type: "video/mp4" });
       chunks = [];
-      // let a = document.createElement("a");
-      // let url = window.URL.createObjectURL(blob);
-      // a.href = url;
-      // a.download = "video.mp4";
-      // a.click();
-      // a.remove();
+
       addMedia(blob, "video");
     });
 

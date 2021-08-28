@@ -1,6 +1,8 @@
 let req = indexedDB.open("Camera", 1);
 let db;
 let body = document.querySelector("body");
+let editPhotoId;
+let cursor;
 
 req.addEventListener("success", function () {
   db = req.result;
@@ -25,8 +27,8 @@ function addMedia(media, type) {
   gallery.add(obj);
 }
 
-function deleteMedia(id){
-  if(!db) return;
+function deleteMedia(id) {
+  if (!db) return;
 
   let tx = db.transaction("Gallery", "readwrite");
   let gallery = tx.objectStore("Gallery");
@@ -35,6 +37,25 @@ function deleteMedia(id){
   gallery.delete(Number(id));
 }
 
+// function editMedia(id){
+//   if(!db) return;
+//   let tx = db.transaction("Gallery", "readonly");
+//   let gallery = tx.objectStore("Gallery");
+//   let cReq = gallery.openCursor();
+
+//   cReq.addEventListener("success", function () {
+//     let cursor = cReq.result;
+//     console.log(cursor);
+//     if (cursor) {
+//       let mediaObj = cursor.value;
+//       if(mediaObj.mId == id){
+//         imageLink = mediaObj.media;
+//         console.log(imageLink);
+//       }
+//     }
+//   });
+// }
+
 //gallery.html
 function viewMedia() {
   let tx = db.transaction("Gallery", "readonly");
@@ -42,26 +63,25 @@ function viewMedia() {
   let cReq = gallery.openCursor();
 
   cReq.addEventListener("success", function () {
-    let cursor = cReq.result;
+    cursor = cReq.result;
     if (cursor) {
-      
       let mediaObj = cursor.value;
 
       let div = document.createElement("div");
       div.classList.add("media-container");
       let linkForDownloadBtn = "";
       if (mediaObj.type == "video") {
-        let url = window.URL.createObjectURL(cursor.value.media);
+        let url = window.URL.createObjectURL(mediaObj.media);
         linkForDownloadBtn = url;
         div.innerHTML = `<div class="media">
         <video src="${url}" autoplay loop controls muted></vide>
     </div>
     <button class="download">Downdload</button>
-    <button class="delete" data-id="${mediaObj.mId}" >Delete</button>`;  //data- is predefined
+    <button class="delete" data-id="${mediaObj.mId}" >Delete</button>`; //data- is predefined
       } else {
-        linkForDownloadBtn = cursor.value.media;
+        linkForDownloadBtn = mediaObj.media;
         div.innerHTML = `<div class="media">
-        <img src="${cursor.value.media}" />
+        <img src="${mediaObj.media}" />
     </div>
     <button class="download">Download</button>
     <button class="delete" data-id="${mediaObj.mId}" >Delete</button>`;
@@ -72,9 +92,9 @@ function viewMedia() {
         let a = document.createElement("a");
         a.href = linkForDownloadBtn;
 
-        if(mediaObj.type = "video"){
+        if ((mediaObj.type = "video")) {
           a.download = "video.mp4";
-        }else{
+        } else {
           a.download = "img.png";
         }
         a.click();
@@ -82,7 +102,7 @@ function viewMedia() {
       });
 
       let deleteBtn = div.querySelector(".delete");
-      deleteBtn.addEventListener("click", function(e){
+      deleteBtn.addEventListener("click", function (e) {
         //removing from db
         let id = e.currentTarget.getAttribute("data-id");
         deleteMedia(id);

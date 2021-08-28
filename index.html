@@ -1,36 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cameo</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
     <div id="video-container">
-        <video autoplay style="transform: scale(1)"></video> 
+      <video autoplay style="transform: scale(1)"></video>
     </div>
-    <button id="record"><div></div></button>
-    <button id="capture"><div></div></button>
 
-    <button id="gallery">Gallery</button>
+    <button id="record">
+      <i class="fa fa-video-camera" aria-hidden="true"></i>
+    </button>
+    <button id="capture">
+      <i class="fa fa-camera" aria-hidden="true"></i>
+    </button>
 
-    <div class="filter-container">
-        <div class="filter" style="background-color: #ff572259"></div>
-        <div class="filter" style="background-color: #03a9f447"></div>
-        <div class="filter" style="background-color: #00968885"></div>
-        <div class="filter" style="background-color: #ffeb3b59"></div>
-        <div class="filter" style="background-color: #23121266"></div>
-        <div class="filter"></div>
-    </div>
+    <button id="gallery">
+      <i class="fa fa-picture-o" aria-hidden="true"></i>
+    </button>
 
     <div class="zoom-container">
-        <div class="zoom-in">+</div>
-        <div class="zoom-out">-</div>
+      <button class="zoom-in">
+        <i class="fa fa-search-plus" aria-hidden="true"></i>
+      </button>
+      <button class="zoom-out">
+        <i class="fa fa-search-minus" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="filter-container">
+      <div class="filter" style="background-color: #ff572259"></div>
+      <div class="filter" style="background-color: #03a9f447"></div>
+      <div class="filter" style="background-color: #00968885"></div>
+      <div class="filter" style="background-color: #ffeb3b59"></div>
+      <div class="filter" style="background-color: #23121266"></div>
+      <div class="filter"></div>
     </div>
 
     <script src="dbScript.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
